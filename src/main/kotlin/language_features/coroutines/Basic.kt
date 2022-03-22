@@ -16,5 +16,5 @@ class Basic {
      * is copied and saved for later. When it resumes, the stack frame is copied back from where it was saved and starts running again.
      *
      */
-    val con : Continuation
+    //val con : Continuation
 }
