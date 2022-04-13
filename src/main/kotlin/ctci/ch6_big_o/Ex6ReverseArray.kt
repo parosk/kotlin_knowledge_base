@@ -2,8 +2,8 @@ package ctci.ch6_big_o
 
 import com.sun.source.tree.BinaryTree
 
-fun main(){
-    val list = mutableListOf(1,2,3,4,5)
+fun main() {
+    val list = mutableListOf(1, 2, 3, 4, 5)
     list.reverse()
     print(list)
 }

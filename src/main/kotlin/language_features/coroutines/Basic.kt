@@ -18,3 +18,14 @@ class Basic {
      */
     //val con : Continuation
 }
+
+
+class Car(val color:String, val noOfSeat:Int);
+
+
+fun main(){
+    val car = Car("red",4)
+
+    print(car.color);
+    print(car.noOfSeat);
+}
