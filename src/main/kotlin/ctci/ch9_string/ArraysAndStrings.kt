@@ -41,7 +41,8 @@ class ArraysAndStrings {
 fun main(){
     //print(uniqueString4("apple"))
     //print(checkPermutation2("local", "lloca"))
-    print(urlify3("Mr John Smith     ".toCharArray(),"Mr John Smith".length))
+    //print(urlify3("Mr John Smith     ".toCharArray(),"Mr John Smith".length))
+    print(isRotation("apple","pplea"))
 }
 //1.1 write a algo to determin if a string has all unique characters
 // what if not additional structure
@@ -239,6 +240,8 @@ fun toggle( bitVector : Int, index :Int){
 }
 
 //1.5 one away
+//Given two strings, write a function to check if they are one edit (or zero edits) away.
+// one edit include replacement/insert/remove
 // basically it is quite brute force
 // from original
 
@@ -284,3 +287,148 @@ fun oneEditAway(first: String, second: String): Boolean {
     return false
 }
 
+
+//1.6 string compress
+// aabcccccaaa would become a2blc5a3
+// will return original result if it is not compressed
+fun compress(str: String): String? {
+    val compressed = StringBuilder()
+    var countConsecutive = 0
+    for (i in str.indices) {
+        countConsecutive++
+
+        /* If next character is different than current, append this char to result.*/if (i + 1 >= str.length || str[i] != str[i + 1]) {
+            compressed.append(str[i])
+            compressed.append(countConsecutive)
+            countConsecutive = 0
+        }
+    }
+    return if (compressed.length < str.length) compressed.toString() else str
+}
+
+
+//1.7 rotate matrix to 90 degree
+fun rotate(matrix: Array<IntArray>): Boolean {
+    // O(n^2) // we have to touch all element
+    if (matrix.isEmpty() || matrix.size != matrix[0].size) return false // Not a square
+    val n = matrix.size
+    for (layer in 0 until n / 2) {
+        val last = n - 1 - layer
+        for (i in layer until last) {
+            val offset = i - layer
+            val top = matrix[layer][i] // save top
+
+            // left -> top
+            matrix[layer][i] = matrix[last - offset][layer]
+
+            // bottom -> left
+            matrix[last - offset][layer] = matrix[last][last - offset]
+
+            // right -> bottom
+            matrix[last][last - offset] = matrix[i][last]
+
+            // top -> right
+            matrix[i][last] = top // right <- saved top
+        }
+    }
+    return true
+}
+
+//1.8 write an algorithm such that if an element in an MxN matrix is 0, its entire row and column are set to 0
+fun setZero(matrix :  Array<IntArray>): Boolean{
+    // my solution,brute force
+    //
+    if (matrix.isEmpty()) return false //
+    val emptyRow = mutableListOf<Int>()
+    val emptyColumn = mutableListOf<Int>()
+
+    matrix.forEachIndexed { columnIndex, ints ->
+        ints.forEachIndexed { rowIndex, value ->
+            if(value == 0){
+                emptyColumn.add(columnIndex)
+                emptyRow.add(rowIndex)
+            }
+
+        }
+    }
+    matrix.forEachIndexed { columnIndex, ints ->
+        ints.forEachIndexed { rowIndex, value ->
+            if(emptyRow.contains(rowIndex) || emptyColumn.contains(columnIndex)){
+                matrix[columnIndex][rowIndex] = 0
+            }
+        }
+    }
+    return true
+}
+
+// official ans
+// with better helper function
+// also use list of bool for flag instead of using contain
+fun nullifyRow(matrix: Array<IntArray>, row: Int) {
+    for (j in 0 until matrix[0].size) {
+        matrix[row][j] = 0
+    }
+}
+
+fun nullifyColumn(matrix: Array<IntArray>, col: Int) {
+    for (i in matrix.indices) {
+        matrix[i][col] = 0
+    }
+}
+
+fun setZeros(matrix: Array<IntArray>) {
+    val row = BooleanArray(matrix.size)
+    val column = BooleanArray(matrix[0].size)
+
+    // Store the row and column index with value 0
+    for (i in matrix.indices) {
+        for (j in 0 until matrix[0].size) {
+            if (matrix[i][j] == 0) {
+                row[i] = true
+                column[j] = true
+            }
+        }
+    }
+
+    // Nullify rows
+    for (i in row.indices) {
+        if (row[i]) {
+            nullifyRow(matrix, i)
+        }
+    }
+
+    // Nullify columns
+    for (j in column.indices) {
+        if (column[j]) {
+            nullifyColumn(matrix, j)
+        }
+    }
+}
+
+//1.9
+//String Rotation: Assume you have a method isSubstring
+// which checks if one  word is a substring of another.
+// Given two strings, S1 and S2, write code to check if S2 is a rotation of S1 using only
+// one call to isSubstring (e.g., waterbottle a rotation erbottlewat).
+
+fun isRotation(s1: String, s2: String): Boolean {
+    // my solution
+    // O(N) becuase foreach
+    // not yet check for correctness but the waterbottle test past
+    if (s1.length != s2.length) return false
+    s1.forEachIndexed { index, c ->
+        if (s1.substring(index, s1.length) == s2.substring(0, s1.length - index)) {
+            if (s2.contains(s1.substring(0, index))) {
+                return true
+            }
+        }
+    }
+    return false
+}
+
+fun isRotation2(s1: String, s2: String): Boolean {
+    //O(N) for contain
+    if (s1.length != s2.length) return false
+    val s1s1 = s1 + s1
+    return s1s1.contains(s2)
+}
