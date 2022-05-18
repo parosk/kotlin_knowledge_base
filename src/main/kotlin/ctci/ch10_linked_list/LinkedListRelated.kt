@@ -21,14 +21,14 @@ class LinkedListRelated {
 }
 
 fun main() {
-    val node = Node(7)
+    val node = Node(6)
     node.next = Node(1)
-    node.next?.next = Node(6)
+    node.next?.next = Node(7)
 
-    val node2 = Node(5)
+    val node2 = Node(2)
     node2.next = Node(9)
-    node2.next?.next = Node(2)
-
+    node2.next?.next = Node(5)
+// (6 -> 1 -> 7) + (2 -> 9 -> 5) = 617 + 295 = 912
     var result = reserve(node)
     iterateNode(result)
     //removeDub(node)
@@ -60,7 +60,6 @@ fun  reserve(n: Node<Int>): Node<Int>{
     reserveAux(n)
     return head!!
 }
-
 
 
 
@@ -231,5 +230,21 @@ fun sum2ListRecurseAux(incomingNode1: Node<Int>?, incomingNode2: Node<Int>?, car
 // (6 -> 1 -> 7) + (2 -> 9 -> 5) = 617 + 295 = 912
 
 //fun sum2Forward
+// my ans
+fun sum2ListForward(incomingNode1: Node<Int>, incomingNode2: Node<Int>): Node<Int> {
+    val reserve1 = reserve(incomingNode1)
+    val reserve2 = reserve(incomingNode2)
+    return  sum2ListRecurse(reserve1,reserve2)
+}
+
+// can come back to this for official ans in the book
+
+//2.6 palindrome check if 0 -> 1 -> 2 -> 1 -> 0
+// one solution is put it in the stack
+// another one is reverse it and compare
+
+
+
+
 
 
