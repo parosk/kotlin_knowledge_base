@@ -1,5 +1,7 @@
 package ctci.ch10_linked_list
 
+import kotlin.math.truncate
+
 data class Node<T>(var value: T, var next: Node<T>? = null) {
     override fun toString(): String {
         return if (next != null) {
@@ -242,9 +244,50 @@ fun sum2ListForward(incomingNode1: Node<Int>, incomingNode2: Node<Int>): Node<In
 //2.6 palindrome check if 0 -> 1 -> 2 -> 1 -> 0
 // one solution is put it in the stack
 // another one is reverse it and compare
+// method 1 reverse and compare
+// there are iterative approach and recursive approach to this question but would skip for now
 
+fun isPalindrome(node: Node<Any>): Boolean {
+    fun reverseAndClone(node: Node<Any>?): Node<Any> {
+        var runner = node
+        var head: Node<Any>? = null
+        while (runner != null) {
+            val n = Node(runner.value)
+            n.next = head
+            head = n
+            runner = runner.next
+        }
+        return head!!
+    }
 
+    fun isEqual(node1: Node<Any>, node2: Node<Any>): Boolean {
+        var runner1: Node<Any>? = node1
+        var runner2: Node<Any>? = node2
+        while (runner1 != null && runner2 != null) {
+            if (runner1.value != runner2.value) {
+                return false
+            }
+            runner1 = runner1.next
+            runner2 = runner2.next
+        }
+        return runner1 == null && runner2 == null
+    }
 
+    val reversed = reverseAndClone(node)
+    return isEqual(node, reversed)
+}
+
+//2.7 intersection
+//given 2 link list, check  if the 2 list intersect , return the intersection node
+// how to tell if there is intersection? if the last node is the same node,
+// there is a interaction some where
+// to find the interaction node, if the 2 link list is the same length, we can transverse at the same pace to check if
+// it is the same node
+fun test(){
+    val a = Node(value = 5)
+    val b = Node(value = 5)
+    print(a === b)
+}
 
 
 
