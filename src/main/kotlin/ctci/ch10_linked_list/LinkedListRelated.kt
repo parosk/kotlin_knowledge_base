@@ -1,7 +1,5 @@
 package ctci.ch10_linked_list
 
-import kotlin.math.truncate
-
 data class Node<T>(var value: T, var next: Node<T>? = null) {
     override fun toString(): String {
         return if (next != null) {
@@ -23,17 +21,18 @@ class LinkedListRelated {
 }
 
 fun main() {
-    val node = Node(6)
-    node.next = Node(1)
-    node.next?.next = Node(7)
-
-    val node2 = Node(2)
-    node2.next = Node(9)
-    node2.next?.next = Node(5)
-// (6 -> 1 -> 7) + (2 -> 9 -> 5) = 617 + 295 = 912
-    var result = reserve(node)
-    iterateNode(result)
-    //removeDub(node)
+//    val node = Node(6)
+//    node.next = Node(1)
+//    node.next?.next = Node(7)
+//
+//    val node2 = Node(2)
+//    node2.next = Node(9)
+//    node2.next?.next = Node(5)
+//// (6 -> 1 -> 7) + (2 -> 9 -> 5) = 617 + 295 = 912
+//    var result = reserve(node)
+//    iterateNode(result)
+//    //removeDub(node)
+    test()
 
 }
 
@@ -286,8 +285,78 @@ fun isPalindrome(node: Node<Any>): Boolean {
 fun test(){
     val a = Node(value = 5)
     val b = Node(value = 5)
+    // check for reference
     print(a === b)
+    // check for the data field
+    print(a == b)
+}
+class Result(tail: Node<*>, size: Int) {
+    var tail: Node<*>
+    var size: Int
+
+    init {
+        this.tail = tail
+        this.size = size
+    }
 }
 
+fun getTailAndSize(list: Node<*>?): Result? {
+    if (list == null) return null
+    var size = 1
+    var current: Node<*> = list
+    while (current.next != null) {
+        size++
+        current = current.next!!
+    }
+    return Result(current, size)
+}
+
+fun getKthNode(head: Node<*>?, k: Int): Node<*>? {
+    var k = k
+    var current: Node<*>? = head
+    while (k > 0 && current != null) {
+        current = current.next
+        k--
+    }
+    return current
+}
+
+fun findIntersection(list1: Node<*>?, list2: Node<*>?): Node<*>? {
+    if (list1 == null || list2 == null) return null
+
+    /* Get tail and sizes. */
+    val result1 = getTailAndSize(list1)
+    val result2 = getTailAndSize(list2)
+
+    /* If different tail nodes, then there's no intersection. */if (result1!!.tail !== result2!!.tail) {
+        return null
+    }
+
+    /* Set pointers to the start of each linked list. */
+    var shorter: Node<*> = if (result1!!.size < result2!!.size) list1 else list2
+    var longer: Node<*>? = if (result1.size < result2.size) list2 else list1
+
+    /* Advance the pointer for the longer linked list by the difference in lengths. */longer = getKthNode(
+        longer, Math.abs(
+            result1.size - result2.size
+        )
+    )
+
+    /* Move both pointers until you have a collision. */while (shorter !== longer) {
+        shorter = shorter.next!!
+        longer = longer!!.next
+    }
+
+    /* Return either one. */return longer
+}
+
+/**
+ * 2.8 Given a circular linked list, implement an algorithm that returns
+ * the node at the beginning of the loop
+ * Input: A -> B -> C -> D -> E -> C[the same C as earlier)
+ * Output: C
+ *
+ * first part : detect if linked List has a loop
+ * */
 
 
